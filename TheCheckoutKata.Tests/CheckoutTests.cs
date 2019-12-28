@@ -38,5 +38,22 @@ namespace TheCheckoutKata.Tests
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(expectedTotal));
         }
+
+        [Test]
+        public void GetTotalPrice_WithScannedItemsOfSameType_IsTotalOfItems()
+        {
+            var validItems = new List<Item>
+            {
+                new Item {Sku = "A", Price = 50},
+                new Item {Sku = "B", Price = 30},
+                new Item {Sku = "C", Price = 20},
+                new Item {Sku = "D", Price = 15}
+            };
+            var checkout = new Checkout(validItems);
+            checkout.Scan("A");
+            checkout.Scan("A");
+            var result = checkout.GetTotalPrice();
+            Assert.That(result, Is.EqualTo(100));
+        }
     }
 }

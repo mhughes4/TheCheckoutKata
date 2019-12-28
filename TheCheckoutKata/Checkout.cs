@@ -5,7 +5,7 @@ namespace TheCheckoutKata
 {
     public class Checkout
     {
-        private string _scannedItem;
+        private readonly IList<string> _scannedItems = new List<string>();
         private readonly IEnumerable<Item> _validItems;
 
         public Checkout(IEnumerable<Item> validItems)
@@ -15,17 +15,19 @@ namespace TheCheckoutKata
 
         public void Scan(string item)
         {
-            _scannedItem = item;
+            _scannedItems.Add(item);
         }
 
         public int GetTotalPrice()
         {
-            if (string.IsNullOrWhiteSpace(_scannedItem))
+            var total = 0;
+
+            foreach(var item in _scannedItems)
             {
-                return 0;
+                total += _validItems.Single(vi => vi.Sku == item).Price;
             }
 
-            return _validItems.Single(i => i.Sku == _scannedItem).Price;
+            return total;
         }
     }
 }
