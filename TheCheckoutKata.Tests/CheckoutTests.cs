@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TheCheckoutKata.Tests
 {
@@ -34,7 +35,8 @@ namespace TheCheckoutKata.Tests
                 new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan(scannedItem);
+            var item = validItems.Single(vi => vi.Sku == scannedItem);
+            checkout.Scan(item);
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(expectedTotal));
         }
@@ -50,8 +52,8 @@ namespace TheCheckoutKata.Tests
                 new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan("A");
-            checkout.Scan("A");
+            checkout.Scan(new Item { Sku = "A", Price = 50 });
+            checkout.Scan(new Item { Sku = "A", Price = 50 });
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(100));
         }
@@ -67,8 +69,8 @@ namespace TheCheckoutKata.Tests
                 new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan("A");
-            checkout.Scan("B");
+            checkout.Scan(new Item { Sku = "A", Price = 50 });
+            checkout.Scan(new Item { Sku = "B", Price = 30 });
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(80));
         }
@@ -84,8 +86,8 @@ namespace TheCheckoutKata.Tests
                 new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan("A");
-            checkout.Scan("E");
+            checkout.Scan(new Item { Sku = "A", Price = 50 });
+            checkout.Scan(new Item { Sku = "E", Price = 30 });
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(50));
         }

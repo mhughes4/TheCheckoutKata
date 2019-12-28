@@ -5,7 +5,7 @@ namespace TheCheckoutKata
 {
     public class Checkout
     {
-        private readonly IList<string> _scannedItems = new List<string>();
+        private readonly IList<Item> _scannedItems = new List<Item>();
         private readonly IEnumerable<Item> _validItems;
 
         public Checkout(IEnumerable<Item> validItems)
@@ -13,24 +13,20 @@ namespace TheCheckoutKata
             _validItems = validItems;
         }
 
-        public void Scan(string item)
+        public void Scan(Item item)
         {
             _scannedItems.Add(item);
         }
 
         public int GetTotalPrice()
         {
-            var total = 0;
+            return _scannedItems.Sum(GetPriceOfValidItem);
+        }
 
-            foreach(var item in _scannedItems)
-            {
-                if(_validItems.Any(vi => vi.Sku == item))
-                {
-                    total += _validItems.Single(vi => vi.Sku == item).Price;
-                }
-            }
-
-            return total;
+        private int GetPriceOfValidItem(Item scannedItem)
+        {
+            var scannedItemIsValid = _validItems.Any(vi => vi.Equals(scannedItem));
+            return scannedItemIsValid ? scannedItem.Price : 0;
         }
     }
 }
