@@ -20,5 +20,14 @@ namespace TheCheckoutKata.Tests
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(50));
         }
+
+        [Test]
+        public void GetTotalPrice_WithItemBScanned_IsPriceOfItemB()
+        {
+            var checkout = new Checkout();
+            checkout.Scan("B");
+            var result = checkout.GetTotalPrice();
+            Assert.That(result, Is.EqualTo(30));
+        }
     }
 }

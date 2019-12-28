@@ -20,6 +20,11 @@
                 return 0;
             }
 
+            if(_scannedItem == "B")
+            {
+                return 30;
+            }
+
             return 50;
         }
     }
