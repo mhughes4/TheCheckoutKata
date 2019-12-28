@@ -10,37 +10,33 @@ namespace TheCheckoutKata.Tests
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50}
+                new Item {Sku = "A", Price = 50},
+                new Item {Sku = "B", Price = 30},
+                new Item {Sku = "C", Price = 20},
+                new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.Zero);
         }
 
-        [Test]
-        public void GetTotalPrice_WithItemAScanned_IsPriceOfItemA()
+        [TestCase("A", 50)]
+        [TestCase("B", 30)]
+        [TestCase("C", 20)]
+        [TestCase("D", 15)]
+        public void GetTotalPrice_WithSingleScannedItem_IsPriceOfItem(string scannedItem, int expectedTotal)
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50}
+                new Item {Sku = "A", Price = 50},
+                new Item {Sku = "B", Price = 30},
+                new Item {Sku = "C", Price = 20},
+                new Item {Sku = "D", Price = 15}
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan("A");
+            checkout.Scan(scannedItem);
             var result = checkout.GetTotalPrice();
-            Assert.That(result, Is.EqualTo(50));
-        }
-
-        [Test]
-        public void GetTotalPrice_WithItemBScanned_IsPriceOfItemB()
-        {
-            var validItems = new List<Item>
-            {
-                new Item {Sku = "B", Price = 30}
-            };
-            var checkout = new Checkout(validItems);
-            checkout.Scan("B");
-            var result = checkout.GetTotalPrice();
-            Assert.That(result, Is.EqualTo(30));
+            Assert.That(result, Is.EqualTo(expectedTotal));
         }
     }
 }
