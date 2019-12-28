@@ -1,44 +1,54 @@
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TheCheckoutKata.Tests
 {
     public class CheckoutTests
     {
+        private readonly Item _itemA = new ItemA();
+        private readonly Item _itemB = new ItemB();
+        private readonly Item _itemC = new ItemC();
+        private readonly Item _itemD = new ItemD();
+        private readonly Item _itemE = new ItemE();
+
         [Test]
         public void GetTotalPrice_WithZeroItems_IsZeroByDefault()
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50},
-                new Item {Sku = "B", Price = 30},
-                new Item {Sku = "C", Price = 20},
-                new Item {Sku = "D", Price = 15}
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
             };
             var checkout = new Checkout(validItems);
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.Zero);
         }
 
-        [TestCase("A", 50)]
-        [TestCase("B", 30)]
-        [TestCase("C", 20)]
-        [TestCase("D", 15)]
-        public void GetTotalPrice_WithSingleScannedItem_IsPriceOfItem(string scannedItem, int expectedTotal)
+        [Test]
+        public void GetTotalPrice_WithSingleScannedItem_IsPriceOfItem()
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50},
-                new Item {Sku = "B", Price = 30},
-                new Item {Sku = "C", Price = 20},
-                new Item {Sku = "D", Price = 15}
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
             };
-            var checkout = new Checkout(validItems);
-            var item = validItems.Single(vi => vi.Sku == scannedItem);
-            checkout.Scan(item);
-            var result = checkout.GetTotalPrice();
-            Assert.That(result, Is.EqualTo(expectedTotal));
+            var itemsToScan = new List<Item>
+            {
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
+            };
+            foreach(var item in itemsToScan)
+            {
+                var checkout = new Checkout(validItems);
+                checkout.Scan(item);
+                Assert.That(checkout.GetTotalPrice(), Is.EqualTo(item.Price));
+            }
         }
 
         [Test]
@@ -46,14 +56,14 @@ namespace TheCheckoutKata.Tests
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50},
-                new Item {Sku = "B", Price = 30},
-                new Item {Sku = "C", Price = 20},
-                new Item {Sku = "D", Price = 15}
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan(new Item { Sku = "A", Price = 50 });
-            checkout.Scan(new Item { Sku = "A", Price = 50 });
+            checkout.Scan(_itemA);
+            checkout.Scan(_itemA);
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(100));
         }
@@ -63,14 +73,14 @@ namespace TheCheckoutKata.Tests
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50},
-                new Item {Sku = "B", Price = 30},
-                new Item {Sku = "C", Price = 20},
-                new Item {Sku = "D", Price = 15}
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan(new Item { Sku = "A", Price = 50 });
-            checkout.Scan(new Item { Sku = "B", Price = 30 });
+            checkout.Scan(_itemA);
+            checkout.Scan(_itemB);
             var result = checkout.GetTotalPrice();
             Assert.That(result, Is.EqualTo(80));
         }
@@ -80,16 +90,16 @@ namespace TheCheckoutKata.Tests
         {
             var validItems = new List<Item>
             {
-                new Item {Sku = "A", Price = 50},
-                new Item {Sku = "B", Price = 30},
-                new Item {Sku = "C", Price = 20},
-                new Item {Sku = "D", Price = 15}
+                _itemA,
+                _itemB,
+                _itemC,
+                _itemD
             };
             var checkout = new Checkout(validItems);
-            checkout.Scan(new Item { Sku = "A", Price = 50 });
-            checkout.Scan(new Item { Sku = "E", Price = 30 });
+            checkout.Scan(_itemA);
+            checkout.Scan(_itemE);
             var result = checkout.GetTotalPrice();
-            Assert.That(result, Is.EqualTo(50));
+            Assert.That(result, Is.EqualTo(_itemA.Price));
         }
     }
 }
