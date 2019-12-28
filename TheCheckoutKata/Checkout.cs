@@ -24,7 +24,10 @@ namespace TheCheckoutKata
 
             foreach(var item in _scannedItems)
             {
-                total += _validItems.Single(vi => vi.Sku == item).Price;
+                if(_validItems.Any(vi => vi.Sku == item))
+                {
+                    total += _validItems.Single(vi => vi.Sku == item).Price;
+                }
             }
 
             return total;
